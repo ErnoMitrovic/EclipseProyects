@@ -1,7 +1,7 @@
-//package claseSegmentation;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.lang.Math;
+import java.util.ArrayList;;
 
 /*
 * Encontrar si la cadena tiene codon inicial, final y regresar la proteina
@@ -20,9 +20,9 @@ public class Segmentation {
 	}
 	*/ 
 
-	public static String [] find(String chain, final String startCodon, final String endCodon, final String
+	public static ArrayList<String> find(String chain, final String startCodon, final String endCodon, final String
 	endCodon1, final String endCodon2) {
-		String [] proteins = new String[3];
+		ArrayList<String> proteins = new ArrayList<String>();
 		chain = chain.toLowerCase();
 		String protein = "Not found";
 		int start = chain.indexOf(startCodon);
@@ -43,9 +43,12 @@ public class Segmentation {
 			}
 			else{
 				end = 0; end1 = 0; end2 = 0;
-				int indexForArray = 0;
+				//int indexForArray = 0;
 				int flag = 0;
+				int indexStartRepeat, indexEndRepeat;
 				while (!chain.isEmpty()){
+					indexStartRepeat = 0;
+					indexEndRepeat = 0;
 					if (chain.contains(startCodon)){
 						start = chain.indexOf(startCodon);
 					}
@@ -53,38 +56,55 @@ public class Segmentation {
 					if (chain.contains(endCodon)){
 						end = chain.indexOf(endCodon, start + startCodon.length());
 						start = chain.lastIndexOf(startCodon, end);
-						protein = chain.substring(start, end + endCodon.length());
-						proteins[indexForArray] = protein;
+						System.out.println("end " + end);
 						while (chain.substring(start, end + endCodon.length()).length() % 3 != 0 && start >= 0){
 							start = chain.lastIndexOf(startCodon, start);
-							protein = chain.substring(start, end + endCodon.length());
-							proteins[indexForArray] = protein;
+							end = chain.indexOf(endCodon, end + startCodon.length());
+							System.out.println("Start " + start + "End " + end);
+							flag++;
+							if (flag > 7) break;
+							if (indexStartRepeat == start && indexEndRepeat == end) break;
+							indexEndRepeat = end;
+							indexStartRepeat = start;
 						}
-						indexForArray++;
+						protein = chain.substring(start, end + endCodon.length());
+						proteins.add(protein);
+						//indexForArray++;
 						chain = chain.replace(protein, "");
 					}else if (chain.contains(endCodon1)){
-						end1 = chain.indexOf(endCodon1, start + startCodon.length());
+						end1 = chain.indexOf(endCodon1, end1 + endCodon1.length());
 						start = chain.lastIndexOf(startCodon, end1);
-						protein = chain.substring(start, end1 + endCodon1.length());
-						proteins[indexForArray] = protein;
 						while (chain.substring(start, end1 + endCodon1.length()).length() % 3 != 0 && start >= 0) {
 							start = chain.lastIndexOf(startCodon, start);
-							protein = chain.substring(start, end1 + endCodon1.length());
-							proteins[indexForArray] = protein;
+							end1 = chain.indexOf(endCodon1, end1 + endCodon1.length());
+							System.out.println("Start " + start);
+							System.out.println("Start " + start + " End1 " + end1);
+							flag++;
+							if (flag > 7) break;
+							if (indexStartRepeat == start && indexEndRepeat == end1) break;
+							indexEndRepeat = end1;
+							indexStartRepeat = start;
 						}
-						indexForArray++;
+						protein = chain.substring(start, end1 + endCodon1.length());
+						proteins.add(protein);
+						//indexForArray++;
 						chain = chain.replace(protein,"");
 					}else if (chain.contains(endCodon2)){
 						end2 = chain.indexOf(endCodon2, start + startCodon.length());
 						start = chain.lastIndexOf(startCodon, end2);
-						protein = chain.substring(start, end2 + endCodon1.length());
-						proteins[indexForArray] = protein;
 						while (chain.substring(start, end2 + endCodon2.length()).length() % 3 != 0 && start >= 0) {
 							start = chain.lastIndexOf(startCodon, start);
-							protein = chain.substring(start, end2 + endCodon1.length());
-							proteins[indexForArray] = protein;
+							end2 = chain.indexOf(endCodon2, end2 + startCodon.length());
+							System.out.println("Start " + start + " End2 " + end2);
+							flag++;
+							if (flag > 7) break;
+							if (indexStartRepeat == start && indexEndRepeat == end2) break;
+							indexEndRepeat = end2;
+							indexStartRepeat = start;
 						}
-						indexForArray++;
+						protein = chain.substring(start, end2 + endCodon1.length());
+						proteins.add(protein);
+						//aindexForArray++;
 						chain = chain.replace(protein, "");
 					}
 					if (flag == 4) break;
@@ -113,7 +133,7 @@ public class Segmentation {
 		final String endCodon2 = "tga";
 		sc.close();
 		//String empty = chain.replace(chain, "");
-		System.out.println(Arrays.toString(find(chain, startCodon, endCodon,endCodon1,endCodon2)));
+		System.out.println(find(chain, startCodon, endCodon,endCodon1,endCodon2));
 
 		/*
 		proteins.add(protein);
