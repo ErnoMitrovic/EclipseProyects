@@ -18,7 +18,7 @@ public class Segmentation {
 		arn = "empty";
 		this.nOfProtein = nOfProtein;
 	}
-	*/
+	*/ 
 
 	public static String [] find(String chain, final String startCodon, final String endCodon, final String
 	endCodon1, final String endCodon2) {
@@ -29,7 +29,7 @@ public class Segmentation {
 		if (start < 0){
 			System.out.println(protein + " start.");
 			return null;
-		} 
+		}
 		else {
 			chain = chain.substring(start, chain.length());
 			start = chain.indexOf(startCodon);
@@ -40,7 +40,7 @@ public class Segmentation {
 			if (end < 0 && end1 < 0 && end2 < 0){
 				System.out.println("Not found" + " end. \nIn the text there are no proteins");
 				return null;
-			} 
+			}
 			else{
 				end = 0; end1 = 0; end2 = 0;
 				int indexForArray = 0;
@@ -114,7 +114,7 @@ public class Segmentation {
 		sc.close();
 		//String empty = chain.replace(chain, "");
 		System.out.println(Arrays.toString(find(chain, startCodon, endCodon,endCodon1,endCodon2)));
-		
+
 		/*
 		proteins.add(protein);
 		proteins.get(0).arn = find(chain,startCodon,endCodon);
