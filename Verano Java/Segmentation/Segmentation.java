@@ -117,24 +117,19 @@ public class Segmentation {
 	}
 
 	public static int longestGene(String [] chains){
-			int lengthOfGene = chains[0].length();
-			if (lengthOfGene == -1) return lengthOfGene;
-			else{
-				for (String gene : chains) {
-					if (lengthOfGene < gene.length()) lengthOfGene = gene.length();
-				}
+		int lengthOfGene = 0;
+		for (String gene : chains) {
+				if (lengthOfGene < gene.length()) lengthOfGene = gene.length();
 			}
-			System.out.println("The largest gene has a length of: " + lengthOfGene);
-			return lengthOfGene;
+		System.out.println("The largest gene has a length of: " + lengthOfGene);
+		return lengthOfGene;
 		}
 
 	public static int proteinsLengthOver (String [] chains, final int majorLength){
 		int count = 0;
-		if (!chains[0].isEmpty()){
-			for (String protein : chains) {
+		for (String protein : chains) {
 				if (protein.length() > majorLength) count++;
-			}
-		}
+		}		
 		System.out.println("The number of proteins that have a length of more than " + majorLength + " are: " + count);
 		return count;
 	}
@@ -175,15 +170,12 @@ public class Segmentation {
 
 	public static float ratioProtein(String[] chains, final String firstToExamine, final String lastToExamine){
 		float value = 0f;
-		String wholeText;
-		if (chains[0].length() >= 0){
-			wholeText = "";
-			for (String gen : chains) {
-				wholeText.concat(gen);
+		String wholeText = "";
+		for (String gen : chains) {
+				wholeText = wholeText.concat(gen);			
 			}
-			int times = countInString(firstToExamine, wholeText) + countInString(lastToExamine, wholeText);
-			value = times / (float)wholeText.length();
-		} 
+		int times = countInString(firstToExamine, wholeText) + countInString(lastToExamine, wholeText);
+		value = times / (float)wholeText.length();
 		System.out.println("The ratio of appearance in the text is: " + value);
 		return value;
 	}
