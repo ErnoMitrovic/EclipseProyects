@@ -12,7 +12,7 @@ import java.util.ArrayList;;
 //atgaataagtaa
 
 public class Segmentation {
-	
+
 	// int nOfProtein;
 	// String arn;
 	// public Segmentation(int nOfProtein){
@@ -129,7 +129,7 @@ public class Segmentation {
 		int count = 0;
 		for (String protein : chains) {
 				if (protein.length() > majorLength) count++;
-		}		
+		}
 		System.out.println("The number of proteins that have a length of more than " + majorLength + " are: " + count);
 		return count;
 	}
@@ -172,7 +172,7 @@ public class Segmentation {
 		float value = 0f;
 		String wholeText = "";
 		for (String gen : chains) {
-				wholeText = wholeText.concat(gen);			
+				wholeText = wholeText.concat(gen);
 			}
 		int times = countInString(firstToExamine, wholeText) + countInString(lastToExamine, wholeText);
 		value = times / (float)wholeText.length();
@@ -197,6 +197,8 @@ public class Segmentation {
 		ArrayList <String> arrayList = find(chain, startCodon, endCodon, endCodon1, endCodon2);
 		System.out.println(arrayList);
 		String [] chains = GetStringArray(arrayList);
+
+		System.out.println("The number of proteins in the text is: " + arrayList.size());
 
 		longestGene(chains);
 
