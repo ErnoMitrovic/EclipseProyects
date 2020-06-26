@@ -8,9 +8,9 @@ public class Fail extends Segmentation{
         ArrayList<String> proteins = new ArrayList<>();
         chain = chain.toLowerCase();
         String noProtein = chain;
-        while (minEndCodonIndex(chain, endCodons) != -1 && chain.contains(startCodon)) {
-            int endCodonIndex = minEndCodonIndex(chain, endCodons);
-            int minimum = minEndCodonIndex(chain, endCodons);
+        while (minEndCodonIndex(chain, endCodons, 0) != -1 && chain.contains(startCodon)) {
+            int endCodonIndex = minEndCodonIndex(chain, endCodons, 0);
+            int minimum = minEndCodonIndex(chain, endCodons, 0);
             if ((chain.indexOf(startCodon) + chain.indexOf(endCodons[endCodonIndex]) % 3 != 0)
                     && (chain.indexOf(startCodon) < chain.indexOf(endCodons[endCodonIndex]))) {
                 noProtein = chain.substring(chain.indexOf(startCodon),
@@ -42,9 +42,16 @@ public class Fail extends Segmentation{
                 }
             }
             System.out.println("The chain for the debug is: " + chain);
-            minimum = minEndCodonIndex(chain, endCodons);
-            endCodonIndex = minEndCodonIndex(chain, endCodons);
+            minimum = minEndCodonIndex(chain, endCodons, 0);
+            endCodonIndex = minEndCodonIndex(chain, endCodons, 0);
         }
         return proteins;
+    }
+    public static boolean logicalXor(final boolean condition1, final boolean condition2){
+        boolean condition = false;
+        if (condition1 || condition2){
+            if (!(condition1 && condition2)) condition = true;
+        }
+        return condition;
     }
 }
