@@ -19,7 +19,9 @@ public class InputMultiple{
       String path = "G:\\Mi unidad\\ESCUELA\\Tec 5° semestre\\Computer science\\IBProyects\\Verano Java\\segmentation\\HomoSapiensDNA.txt";
       File text = new File(path);
       Scanner sc = new Scanner(text);
-      multipleLine(sc);
+      String chain = multipleLine(sc);
+      System.out.println(chain);
       sc.close();
+      System.out.println();
     }
 }
