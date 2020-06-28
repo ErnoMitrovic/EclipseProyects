@@ -1,4 +1,3 @@
-package segmentation;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -14,9 +13,9 @@ public class Archivo {
         }
         return chain;
     }
-    public static void main(String[] args) {
+    /* public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         multipleLine(scanner);
         scanner.close();
-    }
+    } */
 }
