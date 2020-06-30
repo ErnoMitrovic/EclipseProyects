@@ -29,6 +29,10 @@ debug.close(); */
 public class FixErrors{
     public static void main(String[] args) {
 		Scanner debug = new Scanner(System.in);
-		
+		System.out.println("Enter the debug chain: ");
+		final String chain = debug.next();
+		final String startCodon = "atg";
+		final String [] endCodons = {"taa","tag","tga"};
+		debug.close();
     }
 }

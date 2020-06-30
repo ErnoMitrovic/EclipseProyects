@@ -14,8 +14,10 @@ import java.util.ArrayList;
 public class Segmentation {
 	public static String cutProtein(final String chain, final String startCodon){
 		String cuttedProt = chain;
-		int startIndex = chain.indexOf(startCodon);
-		cuttedProt = cuttedProt.substring(startIndex);
+		if (chain.contains(startCodon)){
+			int startIndex = chain.indexOf(startCodon);
+			cuttedProt = cuttedProt.substring(startIndex);
+		} else cuttedProt = "";
 		return cuttedProt;
 	}
 
@@ -28,6 +30,9 @@ public class Segmentation {
 		int flag = 0;
 		while (hasEndCodons && chain.contains(startCodon)){
 			if (flag > 10) break;
+			endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
+			hasEndCodons = endCodonIndex >= 0;
+			boolean emptyProtein = findProtein(chain, startCodon, endCodons, endCodonIndex).isEmpty();
 		}
 		return proteins;
 	}
