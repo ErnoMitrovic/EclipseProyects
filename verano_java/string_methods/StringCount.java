@@ -1,4 +1,4 @@
-package Verano_Java;
+
 import java.util.Scanner;
 public class StringCount{
     public static int countInString(String stringToFind, String stringFinding){
@@ -17,8 +17,10 @@ public class StringCount{
         }else return count;
     }
     public static void main(String[] args) {
-        final String stringToFind = "sope";
+        Scanner sc = new Scanner(System.in);
+        final String stringToFind = sc.next();
         final String stringFinding = "";
         System.out.println("The count of string 1 in string 2 is: " + countInString(stringToFind, stringFinding));
+        sc.close();
     }
 }

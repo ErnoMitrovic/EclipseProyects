@@ -1,8 +1,5 @@
-
 import java.lang.Math;
 import java.util.ArrayList;
-
-
 //cccatggggtttaaataataataggagagagagagagagttt
 //atgaataagtaa
 
@@ -15,12 +12,24 @@ import java.util.ArrayList;
 //atg123456tagatg123456tgaatg12taa1taa
 
 public class Segmentation {
-
 	public static String cutProtein(final String chain, final String startCodon){
 		String cuttedProt = chain;
 		int startIndex = chain.indexOf(startCodon);
 		cuttedProt = cuttedProt.substring(startIndex);
 		return cuttedProt;
+	}
+
+	public static ArrayList <String> proteinsInText(String chain, final String startCodon, final String[] endCodons){
+		ArrayList <String> proteins = new ArrayList<>();
+		chain = chain.toLowerCase();
+		int lastIndex = 0;
+		int endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
+		boolean hasEndCodons = endCodonIndex >= 0;
+		int flag = 0;
+		while (hasEndCodons && chain.contains(startCodon)){
+			if (flag > 10) break;
+		}
+		return proteins;
 	}
 
 	public static String findProtein(String chain, final String startCodon, final String[] endCodons, final int endCodonIndex){
@@ -51,67 +60,6 @@ public class Segmentation {
 			}
 		}
 		return protein;
-	}
-	public static ArrayList <String> chains(String chain, final String startCodon, final String[] endCodons){
-		ArrayList <String> proteins = new ArrayList<>();
-		chain = chain.toLowerCase();
-		int lastIndex = 0;
-		boolean hasEndCodons = minEndCodonIndex(chain, endCodons, lastIndex) >= 0;
-		int endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
-		boolean minCodon;
-		//System.out.println("Has end Codons: " + hasEndCodons + " Chain contains startCodon: " + chain.contains(startCodon));
-		int flag = 0;
-		while (hasEndCodons && chain.contains(startCodon)){
-			if (flag > 10) break;
-			flag ++;
-			boolean condition1 = findProtein(chain, startCodon, endCodons, endCodonIndex).equals("");
-			boolean condition2 = endCodonIndex == -1;
-			if (findProtein(chain, startCodon, endCodons, endCodonIndex).equals("")) {
-				lastIndex = chain.indexOf(endCodons[endCodonIndex]);
-				endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
-			}
-			System.out.println("Condition 1: " + condition1 + "\tCondition 2: " + condition2);
-
-			if (condition1 && condition2) break;
-			hasEndCodons = minEndCodonIndex(chain, endCodons, lastIndex) >= 0;
-			if (endCodonIndex == 0){
-				minCodon = minEndCodonIndex(chain, endCodons, lastIndex) == 0;
-				while (!findProtein(chain, startCodon, endCodons, endCodonIndex).equals("") && minCodon){
-					minCodon = minEndCodonIndex(chain, endCodons, lastIndex) == 0;
-					//System.out.println("Min codon condition taa: " + minCodon);
-					String protein = findProtein(chain, startCodon, endCodons, endCodonIndex);
-					chain = chain.replaceFirst(protein, "");
-					proteins.add(protein);
-					//System.out.println("New chain taa: " + chain);
-				}
-			}
-			else if (endCodonIndex == 1){
-				minCodon = minEndCodonIndex(chain, endCodons, lastIndex) == 1;
-				while (!findProtein(chain, startCodon, endCodons, endCodonIndex).equals("") && minCodon) {
-					minCodon = minEndCodonIndex(chain, endCodons, lastIndex) == 1;
-					//System.out.println("Min codon condition tag: " + minCodon);
-					String protein = findProtein(chain, startCodon, endCodons, endCodonIndex);
-					chain = chain.replaceFirst(protein, "");
-					proteins.add(protein);
-					//System.out.println("New chain tag: " + chain);
-				}
-			}
-			else {
-				minCodon = minEndCodonIndex(chain, endCodons, lastIndex) == 2;
-				while (!findProtein(chain, startCodon, endCodons, endCodonIndex).equals("") && minCodon) {
-					minCodon = minEndCodonIndex(chain, endCodons, lastIndex) == 2;
-					//System.out.println("Min codon condition tga: " + minCodon);
-					String protein = findProtein(chain, startCodon, endCodons, endCodonIndex);
-					chain = chain.replaceFirst(protein, "");
-					proteins.add(protein);
-					//System.out.println("New chain tga: " + chain);
-				}
-				condition1 = findProtein(chain, startCodon, endCodons, endCodonIndex).equals("");
-				condition2 = endCodonIndex == -1;
-			}
-			//System.out.println("The chain in the while chains is: " + chain);
-		}
-		return proteins;
 	}
 
 	public static int minEndCodonIndex(String chain, final String[] endCodons, final int lastIndex){
