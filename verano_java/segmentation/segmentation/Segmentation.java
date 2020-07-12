@@ -24,15 +24,33 @@ public class Segmentation {
 	public static ArrayList <String> proteinsInText(String chain, final String startCodon, final String[] endCodons){
 		ArrayList <String> proteins = new ArrayList<>();
 		chain = chain.toLowerCase();
-		int lastIndex = 0;
-		int endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
+		chain = cutProtein(chain, startCodon);
+		int lastIndex;
+		int endCodonIndex = minEndCodonIndex(chain, endCodons, 3);
 		boolean hasEndCodons = endCodonIndex >= 0;
-		int flag = 0;
+		boolean emptyProtein;
 		while (hasEndCodons && chain.contains(startCodon)){
-			if (flag > 10) break;
+			lastIndex = 3;
 			endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
 			hasEndCodons = endCodonIndex >= 0;
-			boolean emptyProtein = findProtein(chain, startCodon, endCodons, endCodonIndex).isEmpty();
+			emptyProtein = findProtein(chain, startCodon, endCodons, endCodonIndex).isEmpty();
+			while (emptyProtein && hasEndCodons) {
+				lastIndex = chain.indexOf(endCodons[endCodonIndex], lastIndex);
+				while (lastIndex == -1 && endCodonIndex != -1) {
+					endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
+					lastIndex = chain.indexOf(endCodons[endCodonIndex], lastIndex);
+				}
+				endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
+				emptyProtein = findProtein(chain, startCodon, endCodons, endCodonIndex).isEmpty();
+				hasEndCodons = endCodonIndex >= 0;
+			}
+			if (emptyProtein && !hasEndCodons) break;
+			String protein = findProtein(chain, startCodon, endCodons, endCodonIndex);
+			if (!protein.isEmpty()){
+				chain = chain.replaceFirst(protein, "");
+				proteins.add(protein);
+				chain = cutProtein(chain, startCodon);
+			}
 		}
 		return proteins;
 	}

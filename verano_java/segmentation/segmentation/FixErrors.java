@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException; 
 import java.util.Scanner;
 
 /* 
@@ -26,13 +28,16 @@ debug.close(); */
 //System.out.println(chains(chain, startCodon, endCodons));
 //System.out.println(Fail.proteinChains(chain, startCodon, endCodons)); */
 
-public class FixErrors{
-    public static void main(String[] args) {
-		Scanner debug = new Scanner(System.in);
-		System.out.println("Enter the debug chain: ");
+public class FixErrors {
+	public static void main(String[] args) throws FileNotFoundException{
+		String path = "C:\\Users\\miran\\Desktop\\Debug chains\\dna.txt";
+		File textProteins = new File(path);
+		Scanner debug = new Scanner(textProteins);
 		final String chain = debug.next();
 		final String startCodon = "atg";
 		final String [] endCodons = {"taa","tag","tga"};
 		debug.close();
+		System.out.println(Segmentation.proteinsInText(chain, startCodon, endCodons).size());
     }
 }
+//atga123tgaatg123tag
