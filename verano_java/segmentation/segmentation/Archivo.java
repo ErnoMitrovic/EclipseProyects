@@ -1,4 +1,4 @@
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Scanner;
 
 public class Archivo {
@@ -6,10 +6,8 @@ public class Archivo {
         String chain = "";
         while (sc.hasNextLine()) {
             String[] tokens = sc.nextLine().split("\\s");
-            System.out.println(Arrays.toString(tokens));
             if (tokens[0].equals("")) break;
             chain = chain.concat(tokens[0]);
-            System.out.println(chain);
         }
         return chain;
     }

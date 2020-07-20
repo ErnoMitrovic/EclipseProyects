@@ -139,7 +139,7 @@ public class Segmentation {
 	}
 
 
-	public static int longestGene(String [] chains){
+	public static int longestGene(ArrayList <String> chains){
 		int lengthOfGene = 0;
 		for (String gene : chains) {
 				if (lengthOfGene < gene.length()) lengthOfGene = gene.length();
@@ -148,7 +148,7 @@ public class Segmentation {
 		return lengthOfGene;
 		}
 
-	public static int proteinsLengthOver (String [] chains, final int majorLength){
+	public static int proteinsLengthOver (ArrayList<String> chains, final int majorLength){
 		int count = 0;
 		for (String protein : chains) {
 				if (protein.length() > majorLength) count++;
@@ -190,7 +190,7 @@ public class Segmentation {
 			return count;
 	}
 
-	public static float ratioProtein(String[] chains, final String firstToExamine, final String lastToExamine){
+	public static float ratioProtein(ArrayList <String> chains, final String firstToExamine, final String lastToExamine){
 		float value = 0f;
 		String wholeText = "";
 		for (String gen : chains) {

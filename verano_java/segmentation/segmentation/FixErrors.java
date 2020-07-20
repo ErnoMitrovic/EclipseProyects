@@ -1,5 +1,5 @@
 import java.io.File;
-import java.io.FileNotFoundException; 
+import java.io.FileNotFoundException;  
 import java.util.Scanner;
 
 /* 
@@ -12,7 +12,7 @@ System.out.println("Insert chain: ");String chain=sc.next();final String startCo
 // final int majorLength = 22;
 sc.close();
 
-chain="AACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTCACCCTTCTAACTGGACTCTGACCCTGATTGTTGAGGGCTGCAAAGAGGAAGAATTTTATTTACCGTCGCTGTGGCCCCGAGTTGTCCCAAAGCGAGGTAATGCCCGCAAGGTCTGTGCTGATCAGGACGCAGCTCTGCCTTCGGGGTGCCCCTGGACTGCCCGCCCGCCCGGGTCTGTGCTGAGGAGAACGCTGCTCCGCCTCCGCGGTACTCCGGACATATGTGCAGAGAAGAACGCAGCTGCGCCCTCGCCATGCTCTGCGAGTCTCTGCTGATGAGAACACAGCTTCACTTTCGCAAAGGCGCAGCGCCGGCGCAGGCGCGGAGGGGCGCGCAGCGCCGGCGCAGGCGCGGAGGGGCGCGCCCGAACCCGAACCCTAATGCCGTCATAAGAGCCCTAGGGAGACCTTAGGGAACAAGCATTAAACTGACACTCGATTCTGTAGCCGGCTCTGCCAAGAGACATGGCGTTGCGGTGATATGAGGGCAGGGGTCATGGAAGAAAGCCTTCTGGTTTTAG";System.out.println(chain);ArrayList<String>arrayList=Fail.chains(chain,startCodon,endCodons);String[]stringArr=Segmentation.GetStringArray(arrayList);
+System.out.println(chain);ArrayList<String>arrayList=Fail.chains(chain,startCodon,endCodons);String[]stringArr=Segmentation.GetStringArray(arrayList);
 //System.out.println(arrayList);
 System.out.println(arrayList);System.out.println("The number of proteins in the text is: "+arrayList.size());System.out.println("The longest protein has "+Segmentation.longestGene(stringArr)+" letters.");String chainFound=Segmentation.findProtein(chain,startCodon,endCodons,0);System.out.println("Debug chain found "+endCodons[0]+": "+chainFound+"\nWith length: "+chainFound.length());
 //String [] chains = GetStringArray(arrayList);
@@ -30,14 +30,17 @@ debug.close(); */
 
 public class FixErrors {
 	public static void main(String[] args) throws FileNotFoundException{
-		String path = "C:\\Users\\miran\\Desktop\\Debug chains\\dna.txt";
-		File textProteins = new File(path);
-		Scanner debug = new Scanner(textProteins);
-		final String chain = debug.next();
+		String path="C:\\Users\\miran\\Desktop\\Debug chains\\dna.txt";
+		File textProteins=new File(path);
+		Scanner sc = new Scanner(textProteins);
+		String chain = Archivo.multipleLine(sc);
 		final String startCodon = "atg";
 		final String [] endCodons = {"taa","tag","tga"};
-		debug.close();
+		sc.close();
 		System.out.println(Segmentation.proteinsInText(chain, startCodon, endCodons).size());
+		Scanner debug = new Scanner(System.in);
+		chain = Archivo.multipleLine(debug);
+		debug.close();
+		System.out.println(Segmentation.proteinsInText(chain, startCodon, endCodons));
     }
 }
-//atga123tgaatg123tag
