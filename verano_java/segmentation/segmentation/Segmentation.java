@@ -1,204 +1,215 @@
-import java.lang.Math;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-//cccatggggtttaaataataataggagagagagagagagttt
-//atgaataagtaa
-
-//atgtagcgatgctaatgatagggtag
-//Encuentra el archivo de texto
-
-//69
-//~400
-
-//atg123456tagatg123456tgaatg12taa1taa
+import java.util.List;
 
 public class Segmentation {
-	public static String cutProtein(final String chain, final String startCodon){
-		String cuttedProt = chain;
-		if (chain.contains(startCodon)){
-			int startIndex = chain.indexOf(startCodon);
-			cuttedProt = cuttedProt.substring(startIndex);
-		} else cuttedProt = "";
-		return cuttedProt;
-	}
-
-	public static ArrayList <String> proteinsInText(String chain, final String startCodon, final String[] endCodons){
-		ArrayList <String> proteins = new ArrayList<>();
-		chain = chain.toLowerCase();
-		chain = cutProtein(chain, startCodon);
-		int lastIndex;
-		int endCodonIndex = minEndCodonIndex(chain, endCodons, 3);
-		boolean hasEndCodons = endCodonIndex >= 0;
-		boolean emptyProtein;
-		while (hasEndCodons && chain.contains(startCodon)){
-			lastIndex = 3;
-			endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
-			hasEndCodons = endCodonIndex >= 0;
-			emptyProtein = findProtein(chain, startCodon, endCodons, endCodonIndex).isEmpty();
-			while (emptyProtein && hasEndCodons) {
-				lastIndex = chain.indexOf(endCodons[endCodonIndex], lastIndex);
-				while (lastIndex == -1 && endCodonIndex != -1) {
-					endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
-					lastIndex = chain.indexOf(endCodons[endCodonIndex], lastIndex);
-				}
-				endCodonIndex = minEndCodonIndex(chain, endCodons, lastIndex);
-				emptyProtein = findProtein(chain, startCodon, endCodons, endCodonIndex).isEmpty();
-				hasEndCodons = endCodonIndex >= 0;
-			}
-			if (emptyProtein && !hasEndCodons) break;
-			String protein = findProtein(chain, startCodon, endCodons, endCodonIndex);
-			if (!protein.isEmpty()){
-				chain = chain.replaceFirst(protein, "");
+	static ArrayList<String> chains(String text, final String startCodon, final String[] endCodons, String char1, String char2){
+		ArrayList<String> proteins = new ArrayList<>();
+		boolean conditional = true;
+		while (conditional == true){
+			String protein = find(text, startCodon, endCodons);
+			if (protein.isEmpty()) conditional = false;
+			else {
+				text = newChainsText(protein, text);
+				ratiosList(protein, char1, char2);
 				proteins.add(protein);
-				chain = cutProtein(chain, startCodon);
 			}
 		}
 		return proteins;
 	}
+	static ArrayList<Double> ratiosList(String protein, String char1, String char2){
+		ArrayList<Double> ratList = new ArrayList<>();
+		int char1Times = howMany(protein, char1);
+		int char2Times = howMany(protein, char2);
+		int charsInProtein = char1Times + char2Times;
+		double ratio = ratio(charsInProtein, protein);
+		ratList.add(ratio);
+		return ratList;
+	}
+	public static void main(String[] args) throws IOException {
+		Path path = Path.of("C:\\Users\\miran\\Desktop\\Debug chains\\dna.txt");
+		String rawText = Files.readString(path);
+		// System.out.println(rawText);
+		String text = rawText.toLowerCase();
+		String startCodon = "atg";
+		String [] endCodons = {"taa", "tag", "tga"};
+		String char1 = "c";
+		String char2 = "g";
+		List<String> proteinList = new ArrayList<String>();
+		List<Double> ratioList = new ArrayList<Double>();
 
-	public static String findProtein(String chain, final String startCodon, final String[] endCodons, final int endCodonIndex){
-		String protein = "";
-		chain = chain.toLowerCase();
-		chain = cutProtein(chain, startCodon);
-		if (endCodonIndex >= 0){
-			if (chain.contains(startCodon)) {
-				final int startIndex = chain.indexOf(startCodon);
-				if (chain.contains(endCodons[endCodonIndex])) {
-					int stopIndex = chain.indexOf(endCodons[endCodonIndex], startIndex + startCodon.length());
-					protein = chain.substring(startIndex, stopIndex + endCodons[endCodonIndex].length());
-					while (true) {
-						if (protein.length() % 3 != 0) {
-							stopIndex = chain.indexOf(endCodons[endCodonIndex], stopIndex + startCodon.length());
-							if (stopIndex > startIndex) {
-								protein = chain.substring(startIndex, stopIndex + endCodons[endCodonIndex].length());
-							} else if (stopIndex < startIndex) {
-								protein = "";
-								break;
-							}
-						} else
-							break;
-						protein = chain.substring(startIndex, stopIndex + endCodons[endCodonIndex].length());
-						//System.out.println(protein.length() % 3 != 0);
-					}
-				}
+		boolean status = true;
+
+		while (status == true) {
+
+			String validProtein = find(text, startCodon, endCodons);
+			if (validProtein.contentEquals("")) {
+				status = false;
+			} else {
+				int char1Times = howMany(validProtein, char1);
+				int char2Times = howMany(validProtein, char2);
+				int charsInProtein = char1Times + char2Times;
+				double ratio = ratio(charsInProtein, validProtein);
+				text = newChainsText(validProtein, text);
+				proteinList.add(validProtein);
+				ratioList.add(ratio);
 			}
 		}
-		return protein;
+
+		// System.out.println("Lista de proteinas");
+
+		// for (String i : proteinList) {
+		// System.out.println(i);
+		// }
+
+		// System.out.println("Lista de ratios");
+
+		// for (double i : ratioList) {
+		// System.out.println(i);
+		// }
+
+		for (int i = 0; i <= proteinList.size() - 1; i++) {
+			System.out.println("Proteina " + (i + 1) + ": [" + proteinList.get(i) + "] Ratio de " + char1 + " y "
+					+ char2 + ": {" + ratioList.get(i) + "}");
+		}
+
+		System.out.println(proteinList.size());
+
 	}
 
-	public static int minEndCodonIndex(String chain, final String[] endCodons, final int lastIndex){
-		int minIndex = -1;
-		String codon = "";
-		chain = chain.toLowerCase();
-		chain = chain.substring(lastIndex + endCodons[0].length(), chain.length());
-		boolean existFirstCodon = chain.contains(endCodons[0]);
-		boolean existSecondCodon = chain.contains(endCodons[1]);
-		boolean existThirdCodon = chain.contains(endCodons[2]);
+	public static int howMany(String word1, String word2) {
 
-		if (existFirstCodon && existSecondCodon && existThirdCodon){
-			final int firstCodonInd = chain.indexOf(endCodons[0]);
-			final int secondCodonInd = chain.indexOf(endCodons[1]);
-			final int thirdCodonInd = chain.indexOf(endCodons[2]);
-			minIndex = Math.min(firstCodonInd, secondCodonInd);
-			minIndex = Math.min(minIndex,thirdCodonInd);
-			codon = chain.substring(minIndex, minIndex + endCodons[0].length());
-			//System.out.println(codon);
-			if (codon.equals(endCodons[0])) return 0;
-			else if (codon.equals(endCodons[1])) return 1;
-			else return 2;
-		}
-		else if (existFirstCodon && existSecondCodon) {
-			final int firstCodonInd = chain.indexOf(endCodons[0]);
-			final int secondCodonInd = chain.indexOf(endCodons[1]);
-			minIndex = Math.min(firstCodonInd,secondCodonInd);
-			codon = chain.substring(minIndex, minIndex + endCodons[0].length());
-			//System.out.println(codon);
-			if (codon.equals(endCodons[0])) return 0;
-			else return 1;
-		}
-		else if (existFirstCodon && existThirdCodon){
-			final int firstCodonInd = chain.indexOf(endCodons[0]);
-			final int thirdCodonInd = chain.indexOf(endCodons[2]);
-			minIndex = Math.min(firstCodonInd, thirdCodonInd);
-			codon = chain.substring(minIndex, minIndex + endCodons[0].length());
-			//System.out.println(codon);
-			if (codon.equals(endCodons[0])) return 0;
-			else return 2;
-		}
-		else if(existSecondCodon && existThirdCodon) {
-			final int secondCodonInd = chain.indexOf(endCodons[1]);
-			final int thirdCodonInd = chain.indexOf(endCodons[2]);
-			minIndex = Math.min(secondCodonInd, thirdCodonInd);
-			codon = chain.substring(minIndex, minIndex + endCodons[0].length());
-			if (codon.equals(endCodons[1])) return 1;
-			else return 2;
-		}
-		else if (existFirstCodon) return 0;
-		else if (existSecondCodon) return 1;
-		else if (existThirdCodon) return 2;
-		else return minIndex;
-	}
-
-
-	public static int longestGene(ArrayList <String> chains){
-		int lengthOfGene = 0;
-		for (String gene : chains) {
-				if (lengthOfGene < gene.length()) lengthOfGene = gene.length();
-			}
-		System.out.println("The largest gene has a length of: " + lengthOfGene);
-		return lengthOfGene;
-		}
-
-	public static int proteinsLengthOver (ArrayList<String> chains, final int majorLength){
 		int count = 0;
-		for (String protein : chains) {
-				if (protein.length() > majorLength) count++;
+		int start = word1.indexOf(word2);
+		// System.out.println("Proteina: " + word1);
+		// System.out.println("Car�ctere buscado; " + word2);
+		boolean status = true;
+		while (status) {
+			if (start == -1) {
+				status = false;
+			} else {
+				count++;
+				start = word1.indexOf(word2, start + word2.length());
+			}
+
 		}
-		System.out.println("The number of proteins that have a length of more than " + majorLength + " are: " + count);
+		// System.out.print("Numero de veces en la proteina: ");
+		// System.out.println(count);
 		return count;
 	}
-	public static String[] GetStringArray(ArrayList<String> arr) {
 
-		// declaration and initialise String Array
-		String str[] = new String[arr.size()];
+	public static double ratio(double value1, String text) {
+		double ratio = value1 / text.length();
+		// System.out.println("Ratio: " + ratio);
+		return ratio;
+	}
 
-		// Convert ArrayList to object array
-		Object[] objArr = arr.toArray();
+	public static String newChainsText(String replacement, String completeText) {
+		String finalReplacement = completeText.substring(0, completeText.indexOf(replacement) + replacement.length());
+		completeText = completeText.replaceFirst(finalReplacement, "");
+		return completeText;
+	}
 
-		// Iterating and converting to String
-		int i = 0;
-		for (Object obj : objArr) {
-			str[i++] = (String) obj;
+	public static String find(String word, String startCodon, String [] endCodons) {
+		// System.out.println("ADN: " + word);
+		int start = word.indexOf(startCodon);
+		int end = 0;
+		int end1 = word.indexOf(endCodons[0], start + startCodon.length());
+		int end2 = word.indexOf(endCodons[1], start + startCodon.length());
+		int end3 = word.indexOf(endCodons[2], start + startCodon.length());
+		int currentIndex1 = 0;
+		int currentIndex2 = 0;
+		int currentIndex3 = 0;
+		String protein = "";
+
+		while ((end1 - start) % 3 != 0 && end1 != -1 && start != -1) {
+			// String protein1 = word.substring(start, end1+endCodon1.length());
+			String wholeWord1 = word.substring(0, end1 + endCodons[0].length());
+			currentIndex1 = wholeWord1.length();
+
+			// System.out.println("El ADN " + protein1 + " no es m�ltiplo de tres");
+			// System.out.println(protein1.length());
+			// System.out.println(currentIndex1);
+			// System.out.println(end1);
+			end1 = word.indexOf(endCodons[0], currentIndex1);
+			// System.out.println(end1);
+
+		}
+		while ((end2 - start) % 3 != 0 && end2 != -1 && start != -1) {
+			// String protein2 = word.substring(start, end2+endCodon2.length());
+			String wholeWord2 = word.substring(0, end2 + endCodons[1].length());
+			currentIndex2 = wholeWord2.length();
+
+			// System.out.println("El ADN " + protein2 + " no es m�ltiplo de tres");
+			// System.out.println(protein2.length());
+			// System.out.println(currentIndex2);
+			// System.out.println(end2);
+			end2 = word.indexOf(endCodons[1], currentIndex2);
+			// System.out.println(end2);
+
 		}
 
-		return str;
-	}
+		while ((end3 - start) % 3 != 0 && end3 != -1 && start != -1) {
+			// String protein3 = word.substring(start, end3+endCodon3.length());
+			String wholeWord3 = word.substring(0, end3 + endCodons[2].length());
+			currentIndex3 = wholeWord3.length();
 
-	public static int countInString(String stringToFind, String stringFinding) {
-		stringToFind = stringToFind.toLowerCase();
-		stringFinding = stringFinding.toLowerCase();
-		int count = 0;
-		boolean found = stringFinding.contains(stringToFind);
-		if (found) {
-			int index = stringFinding.indexOf(stringToFind);
-			while (index != -1) {
-				count++;
-				stringFinding = stringFinding.substring(index + 1);
-				index = stringFinding.indexOf(stringToFind);
-			}
-			return count;
-		} else
-			return count;
-	}
+			// System.out.println("El ADN " + protein3 + " no es m�ltiplo de tres");
+			// System.out.println(protein3.length());
+			// System.out.println(currentIndex3);
+			// System.out.println(end3);
+			end3 = word.indexOf(endCodons[2], currentIndex3);
+			// System.out.println(end3);
 
-	public static float ratioProtein(ArrayList <String> chains, final String firstToExamine, final String lastToExamine){
-		float value = 0f;
-		String wholeText = "";
-		for (String gen : chains) {
-				wholeText = wholeText.concat(gen);
+		}
+
+		if (end1 == -1 && end2 == -1 && end3 == -1) {
+			end = -1;
+		}
+
+		else {
+			if (end1 == -1)
+				end1 = word.length() + 1;
+			if (end2 == -1)
+				end2 = word.length() + 1;
+			if (end3 == -1)
+				end3 = word.length() + 1;
+
+			if (end1 >= 0 && end1 < end2 && end1 < end3) {
+				end = end1;
+			} else if (end2 >= 0 && end2 < end1 && end2 < end3) {
+				end = end2;
+			} else if (end3 >= 0 && end3 < end1 && end3 < end2) {
+				end = end3;
+			} else {
+				System.out.println("Idk");
 			}
-		int times = countInString(firstToExamine, wholeText) + countInString(lastToExamine, wholeText);
-		value = times / (float)wholeText.length();
-		System.out.println("The ratio of appearance in the text is: " + value);
-		return value;
+		}
+
+		if (start >= 0 && end >= 0) {
+			protein = word.substring(start, end + 3);
+
+			// System.out.println("La proteina es: " + protein + " y es m�ltiplo de tres");
+			return protein;
+
+		}
+
+		else if (start == -1 && end == -1) {
+			System.out.println("No more proteins were found.");
+			System.out.println("Reason:\n Neither codon was found.");
+			return "";
+		} else if (start == -1) {
+			System.out.println("No more proteins were found.");
+			System.out.println("Reason:\nFirst codon wasn't found.");
+			return "";
+		} else if (end == -1) {
+			System.out.println("No more proteins were found");
+			System.out.println("Reason:\nNo end codons were found.");
+			return "";
+		} else {
+			return "";
+		}
 	}
 }

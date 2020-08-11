@@ -1,5 +1,5 @@
 import java.io.File;
-import java.io.FileNotFoundException;  
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /* 
@@ -33,14 +33,24 @@ public class FixErrors {
 		String path="C:\\Users\\miran\\Desktop\\Debug chains\\dna.txt";
 		File textProteins=new File(path);
 		Scanner sc = new Scanner(textProteins);
-		String chain = Archivo.multipleLine(sc);
+		String text = Archivo.multipleLine(sc);
+		text = text.toLowerCase();
 		final String startCodon = "atg";
 		final String [] endCodons = {"taa","tag","tga"};
+		final String char1 = "c";
+		final String char2 = "g";
 		sc.close();
-		System.out.println(Segmentation.proteinsInText(chain, startCodon, endCodons).size());
-		Scanner debug = new Scanner(System.in);
+		System.out.println(Segmentation.chains(text, startCodon, endCodons, char1, char2).size());
+		/* Scanner debug = new Scanner(System.in);
 		chain = Archivo.multipleLine(debug);
-		debug.close();
-		System.out.println(Segmentation.proteinsInText(chain, startCodon, endCodons));
+		debug.close(); */
+		/* ArrayList <String> chains = Fail.proteinsInText(chain, startCodon, endCodons);
+		int i = 1;
+		for (String string : chains) {
+			System.out.println("The protein " + i + " has a length of: " + string.length());
+			i++;
+		}
+		System.out.println(chains.size());
+		System.out.println(chains); */
     }
 }
