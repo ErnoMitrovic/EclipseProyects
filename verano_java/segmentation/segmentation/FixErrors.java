@@ -31,14 +31,13 @@ debug.close(); */
 public class FixErrors {
 	public static void main(String[] args) throws FileNotFoundException{
 		String path="C:\\Users\\miran\\Desktop\\Debug chains\\dna.txt";
-		File textProteins=new File(path);
-		Scanner sc = new Scanner(textProteins);
+		//File textProteins=new File(path);
+		Scanner sc = new Scanner(new File(path));
 		String text = Archivo.multipleLine(sc);
 		text = text.toLowerCase();
 		final String startCodon = "atg";
 		final String [] endCodons = {"taa","tag","tga"};
-		final String char1 = "c";
-		final String char2 = "g";
+		final String char1 = "c", char2 = "g";
 		sc.close();
 		System.out.println(Segmentation.chains(text, startCodon, endCodons, char1, char2).size());
 		/* Scanner debug = new Scanner(System.in);
