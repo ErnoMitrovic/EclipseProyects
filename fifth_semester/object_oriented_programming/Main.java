@@ -17,5 +17,6 @@ public class Main {
         if (!myDog.equals(myAnimal)){
             System.out.println("Claro");
         }
+        System.out.println("Primo");
     }
 }
