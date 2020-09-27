@@ -13,10 +13,9 @@ public class Main {
         cell.changeStatus();
         System.out.println(cell.status);
         Animal myAnimal = new Animal("Spike", "black", true);
-        Dog myDog = new Dog(myAnimal, true);       
+        Dog myDog = new Dog(myAnimal, true);
         if (!myDog.equals(myAnimal)){
             System.out.println("Claro");
         }
-        System.out.println("Primo");
     }
 }
